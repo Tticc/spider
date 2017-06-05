@@ -1,17 +1,35 @@
 package com.spider.manipulateDB;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.Properties;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class MySQLHelper {
-	public static final String url = "jdbc:mysql://localhost:3306/test";
-    public static final String name = "com.mysql.jdbc.Driver";
-    public static final String user = "root";
-    public static final String password = "123456";
+	
+	static{
+		InputStream stream = ClassLoader.getSystemResourceAsStream("config/jdbc.properties");
+		Properties properties=new Properties();
+		try {
+			properties.load(stream);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		url = properties.getProperty("jdbc.databaseurl");
+		name= properties.getProperty("jdbc.driverClassName");
+		user= properties.getProperty("jdbc.username");
+		password= properties.getProperty("jdbc.password");
+	}
+	
+	public static final String url;
+    public static final String name;
+    public static final String user;
+    public static final String password;
     public Connection conn = null;
     public PreparedStatement pst = null;
     public Statement st = null;
