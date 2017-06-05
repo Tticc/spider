@@ -19,35 +19,7 @@ import java.util.LinkedList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.log4j.FileAppender;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.SimpleLayout;
 
-
-class WriteLog{
-	private WriteLog(){}
-	
-	private static Logger logger = null;
-	public static Logger GetLog(String className){
-		if(logger == null){
-			logger = Logger.getLogger(className);
-			setting();
-		}
-		return logger;
-	}
-	
-	private static void setting(){
-		FileAppender appender = null;
-		SimpleLayout layout = new SimpleLayout();
-	      try {
-
-	          appender = new FileAppender(layout,"D:\\spider\\log\\output1.txt",false);
-
-	       } catch(Exception e) {}
-	      logger.addAppender(appender);
-	}
-}
 
 
 /**
@@ -61,9 +33,6 @@ public class TestDemo1ImgVersion {
 	public static ArrayList<UrlDataHanding> ths = new ArrayList<UrlDataHanding>();
 	public static void main(String[] args) throws InterruptedException {
 		String url = "https://www.hao123.com/";////"http://13.76.185.51:8080/Medical/jsp/frontPage/index.jsp";
-		
-		WriteLog.GetLog(TestDemo1ImgVersion.class.getName()).info("go into addUser");
-		WriteLog.GetLog(TestDemo1ImgVersion.class.getName()).info("now go into the main method");
 		
 		Tools.addElem(url);
 		//get-page thread size.

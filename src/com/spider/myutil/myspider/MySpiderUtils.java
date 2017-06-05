@@ -1,4 +1,4 @@
-package com.spider.test.img;
+package com.spider.myutil.myspider;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -8,7 +8,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.LinkedList;
 
-public class CommonUtils {
+public class MySpiderUtils {
 
 	
 	/**

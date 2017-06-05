@@ -1,4 +1,4 @@
-package com.sprider.test;
+package com.spider.test;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -33,6 +33,6 @@ public class TestReadConfig {
         System.out.println(contextPath);
         System.out.println(properties.getProperty("path"));
         System.out.println(System.getProperty("user.dir"));
-        System.out.println(TestReadConfig.class.getClassLoader().getResource("config/my.properties"));
+        System.out.println(TestReadConfig.class.getClassLoader().getResource("config/my.properties").toString());
 	}
 }

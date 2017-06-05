@@ -1,4 +1,4 @@
-package com.sprider.test;
+package com.spider.test;
 
 public class TestSplit {
 
