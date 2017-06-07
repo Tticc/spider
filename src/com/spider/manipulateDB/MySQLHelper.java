@@ -20,10 +20,10 @@ public class MySQLHelper {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		url = properties.getProperty("jdbc.databaseurl");
-		name= properties.getProperty("jdbc.driverClassName");
-		user= properties.getProperty("jdbc.username");
-		password= properties.getProperty("jdbc.password");
+		url = (properties.getProperty("jdbc.databaseurl")==null) ? "jdbc:mysql://localhost:3306/test":properties.getProperty("jdbc.databaseurl");
+		name= (properties.getProperty("jdbc.driverClassName")==null) ? "com.mysql.jdbc.Driver" : properties.getProperty("jdbc.driverClassName");
+		user= (properties.getProperty("jdbc.username")==null) ? "root" : properties.getProperty("jdbc.username");
+		password= (properties.getProperty("jdbc.password")==null) ? "123456" : properties.getProperty("jdbc.password");
 	}
 	
 	public static final String url;

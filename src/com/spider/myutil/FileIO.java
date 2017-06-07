@@ -16,20 +16,20 @@ public class FileIO {
 		String content = readFile(f);
 		System.out.println(content);
 		content += "new append";
-		appendWriteFileWithString(f,content);
+		//appendWriteFileWithString(f,content);
 		//newWriteFileWithString(f,content);
 	}
 	/**
 	 * read file and return a String, if return null, file not found
-	 * @param f(File)
+	 * @param file(File)
 	 * @return String
 	 */
-	public static String readFile(File f){
+	public static String readFile(File file){
 		String str = null;
 		StringBuilder sb = new StringBuilder();
 		BufferedReader input;
 		try {
-			input = new BufferedReader(new FileReader(f));
+			input = new BufferedReader(new FileReader(file));
 		} catch (FileNotFoundException e1) {
 			e1.printStackTrace();
 			return null;
