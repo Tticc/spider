@@ -51,7 +51,7 @@ class WriteURLToFile implements Runnable{
 		//String str = new String(); //原有txt内容  
         StringBuilder s1 = new StringBuilder();//内容更新  
 		String filePath = "D:" + File.separator +"spider" + File.separator + "URL.txt";
-		File f = new File(filePath);  
+		File f = new File(filePath);
         if (f.exists()) {  
             System.out.println("文件存在--WriteURLToFile");  
         } else {  
