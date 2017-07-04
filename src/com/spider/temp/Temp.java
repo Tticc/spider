@@ -1,4 +1,4 @@
-package com.spider.test.img;
+package com.spider.temp;
 
 
 import java.io.BufferedReader;
@@ -19,6 +19,16 @@ import java.util.LinkedList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLSession;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+
 
 
 
@@ -27,7 +37,7 @@ import java.util.regex.Pattern;
  * @author wenc
  *
  */
-public class TestDemo1ImgVersion { 
+public class Temp { 
 	
 	//private final static Logger logger = ;
 	public static ArrayList<UrlDataHanding> ths = new ArrayList<UrlDataHanding>();
@@ -36,7 +46,7 @@ public class TestDemo1ImgVersion {
 		
 		Tools.addElem(url);
 		//get-page thread size.
-		int UrlDataHandingThreadSize = 2;
+		int UrlDataHandingThreadSize = 1;
 		//start get-page thread
 		for (int i = 0; i < UrlDataHandingThreadSize; i++) {             
 			ths.add(new UrlDataHanding());
@@ -59,7 +69,7 @@ public class TestDemo1ImgVersion {
 		}
 
 		Thread.sleep(1000*60);*/
-		downloadImg[] dlis = new downloadImg[50];
+		downloadImg[] dlis = new downloadImg[1];
 		for(int i = 0; i < dlis.length; i++){
 			dlis[i] = new downloadImg();
 			dlis[i].start();
@@ -114,12 +124,15 @@ class downloadImg extends Thread {
 
    
     public void run() {
+    	int count = 1;
         while (!Tools.isImgUrlEmpty()) {  
+        	
         	try{
             	System.out.println("Thread ID--"+Thread.currentThread().getId());
         		System.out.println("unproduced number : "+Tools.imgUrlSize());
         		String url = Tools.outElemFromImgUrl();
-        		Tools.downloadImg(Tools.createDir(url), url);
+        		Tools.downloadImg(Tools.createDir(url), url,count);
+        		count++;
         	}catch(Exception ex){
         		ex.printStackTrace();
         	}
@@ -277,10 +290,10 @@ class Tools{
 		            URL realUrl = new URL(url);
 		            URLConnection connection = realUrl.openConnection();
 		            //将爬虫连接伪装成浏览器连接
-		            //connection.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
+		            connection.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
 		            connection.connect();
 		            InputStream urlStream = connection.getInputStream();  
-		             in = new BufferedReader(new InputStreamReader(urlStream,"utf-8"));  
+		             in = new BufferedReader(new InputStreamReader(urlStream,"gb2312"));  
 		            String line = "";  
 		            while ((line = in.readLine()) != null) {
 		                result.append(line);
@@ -378,13 +391,14 @@ class Tools{
 		        }
 	        return finalUrl;
 	    }
+
 		
 		/**
 		 * use the completed url(imgUrl) to download the img, and save them into "path"
 		 * @param path
 		 * @param imgUrl
 		 */
-		public static void downloadImg(String path, String imgUrl){
+		public static void downloadImg(String path, String imgUrl,int count){
 			int splitPosition = imgUrl.indexOf("?http");			
 			if(splitPosition >= 0 ){
 				imgUrl = imgUrl.substring(splitPosition+1, imgUrl.length());
@@ -392,18 +406,29 @@ class Tools{
 			try{
 					System.out.println("downloadImg start!");
 					String imgName = imgUrl.substring(imgUrl.lastIndexOf("/")+1, imgUrl.length());
-					URL uri = new URL(imgUrl);
-					
-					//start
-					URLConnection urlcon = uri.openConnection();
-					//将爬虫连接伪装成浏览器连接
-					urlcon.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
-					urlcon.connect();
-					InputStream in = urlcon.getInputStream();  
-					//end
-					
-					//InputStream in = uri.openStream();
-					
+					imgName = count+".jpg";
+					InputStream in = null;
+					if(imgUrl.startsWith("https://")){
+						//new
+						HttpClient httpClient = new DefaultHttpClient();
+						httpClient = HttpsClient.getNewHttpsClient(httpClient);
+						HttpGet httpGet = new HttpGet(imgUrl);
+						HttpResponse response = httpClient.execute(httpGet);
+						HttpEntity entity = response.getEntity();
+						in = entity.getContent();
+					}
+					else{
+						URL uri = new URL(imgUrl);
+						//start
+						URLConnection urlcon = uri.openConnection();
+						//将爬虫连接伪装成浏览器连接
+						urlcon.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
+						urlcon.connect();
+						in = urlcon.getInputStream();
+						//end
+						
+						//in = uri.openStream();
+					}
 					FileOutputStream fo = new FileOutputStream(new File(path + File.separator + imgName));
 		            byte[] buf = new byte[1024];  
 		            int length = 0;  
@@ -418,6 +443,7 @@ class Tools{
 				System.out.println("downloadImg end!");
 			}
 		}
+		
 		
 		/**
 		 * According to the url, Creating all needed folders. Attention! the url pattent is : "xxx?http.....", so need to remove "xxx?"
@@ -444,6 +470,7 @@ class Tools{
 				sb.append(File.separator);
 				sb.append(section[i]);				
 			}
+			//sb.append("\\new1");
 			sb.append(folderName);
 			File dir = new File(sb.toString());
 			if(!dir.exists()){
@@ -473,7 +500,13 @@ class Tools{
 				contents[i] = contents[i].substring(0,length);
 			}
 	        for(String url : contents){
-	        	int start = url.indexOf("src");
+	        	int start = url.indexOf("src=");
+	        	if(start<0){
+	        		start = url.indexOf("src =");
+	        		if(start < 0 ){
+	        			continue;
+	        		}
+	        	}
 	        	if(start<0){
 	        		continue;
 	        	}
@@ -575,3 +608,5 @@ class Tools{
 		}
 
 }
+
+
