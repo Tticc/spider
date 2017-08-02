@@ -6,7 +6,7 @@ import java.util.List;
 
 
 public class Main {  
-    public static void main(String[] args) throws SQLException {  
+    public static void main(String[] args) throws SQLException, InterruptedException {  
         String url = "http://www.oschina.net/code/explore/achartengine/client/AndroidManifest.xml";  
         String url1 = "http://www.oschina.net/code/explore";  
         String url2 = "http://13.76.191.189:8080/yk/sources/pages/home.jsp";//"http://www.oschina.net/code/explore/achartengine";  
@@ -22,10 +22,14 @@ public class Main {
         
         UrlDataHanding[] url_Handings = new UrlDataHanding[10];  
   
-        for (int i = 0; i < 10; i++) {  
+        for (int i = 0; i < 40; i++) {  
             url_Handings[i] = new UrlDataHanding();  
             new Thread(url_Handings[i]).start();  
+            Thread.sleep(1000);
         }  
+        
+        //352212-6552
+        
         /*String as = DownloadPage.getContentFormUrl("http://www.baidu.com");
         //System.out.println(as);
         

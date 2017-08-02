@@ -12,7 +12,11 @@ public class UrlDataHanding implements Runnable {
   
     public void run() {  
         while (!UrlQueue.isEmpty()) {  
-            dataHanding(UrlQueue.outElem());  
+        	try{
+            dataHanding(UrlQueue.outElem()); 
+        	}catch(Exception ex){
+        		ex.printStackTrace();
+        	}
         }  
     }  
 }  

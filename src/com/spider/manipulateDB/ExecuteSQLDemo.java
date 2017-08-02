@@ -36,7 +36,7 @@ public class ExecuteSQLDemo {
 			pst = mh.getPst("insert into test1(name) values(?)");
 			//pst = mh.getPst("update test1 set name = ? where id= ?");
 			pst.setString(1, "xds");
-			count = pst.executeUpdate();
+			count = pst.executeUpdate();//executeUpdate and, when query , it is executeQuery
 			
 		} catch (SQLException e) {
 			e.printStackTrace();

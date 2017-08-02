@@ -30,8 +30,6 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 
-
-
 /**
  * main method
  * @author wenc
@@ -42,7 +40,7 @@ public class Temp {
 	//private final static Logger logger = ;
 	public static ArrayList<UrlDataHanding> ths = new ArrayList<UrlDataHanding>();
 	public static void main(String[] args) throws InterruptedException {
-		String url = "https://www.hao123.com/";////"http://13.76.185.51:8080/Medical/jsp/frontPage/index.jsp";
+		String url = "http://www.baidu.com/";////"http://13.76.185.51:8080/Medical/jsp/frontPage/index.jsp";
 		
 		Tools.addElem(url);
 		//get-page thread size.
@@ -223,7 +221,7 @@ class UrlDataHanding extends Thread {
  */
 class Tools{
 		//download page in the specific path, it depend what url will put into "urlQueue"
-		public static final String specificPath = "https://www.hao123.com/";//
+		public static final String specificPath = "http://www.baidu.com/";//
 		//unvisited page url
 		public static LinkedList<String> urlQueue = new LinkedList<String>();
 		//unvisited imp url
@@ -293,7 +291,7 @@ class Tools{
 		            connection.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
 		            connection.connect();
 		            InputStream urlStream = connection.getInputStream();  
-		             in = new BufferedReader(new InputStreamReader(urlStream,"gb2312"));  
+		             in = new BufferedReader(new InputStreamReader(urlStream,"utf-8"));  
 		            String line = "";  
 		            while ((line = in.readLine()) != null) {
 		                result.append(line);

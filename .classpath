@@ -14,5 +14,9 @@
 	<classpathentry kind="lib" path="lib/jna-platform-4.1.0.jar"/>
 	<classpathentry kind="lib" path="lib/log4j-1.2.15.jar"/>
 	<classpathentry kind="lib" path="lib/mysql-connector-java-5.0.8.jar"/>
+	<classpathentry kind="lib" path="C:/Users/wenc/Workspaces/MyEclipse 2016/spider/lib/junit-4.6.jar"/>
+	<classpathentry kind="lib" path="C:/Users/wenc/Workspaces/MyEclipse 2016/spider/lib/btrace-agent.jar"/>
+	<classpathentry kind="lib" path="C:/Users/wenc/Workspaces/MyEclipse 2016/spider/lib/btrace-boot.jar"/>
+	<classpathentry kind="lib" path="C:/Users/wenc/Workspaces/MyEclipse 2016/spider/lib/btrace-client.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
