@@ -103,7 +103,7 @@ public class FunctionUtils {
      * @param href 
      * @return 
      */  
-    public static String getHrefOfInOut(String href) {  
+    public static String getHrefOfInOut(String href,String oriUrl) {  
         /* 内外部链接最终转化为完整的链接格式 */  
         String resultHref = null;  
   
@@ -113,7 +113,11 @@ public class FunctionUtils {
         } else {  
             /* 如果是内部链接,则补充完整的链接地址,其他的格式忽略不处理,如：a href="#" */  
             if (href.startsWith("/")) {  
-                resultHref = "http://13.76.191.189:8080" + href;  
+            	oriUrl = oriUrl.replace("//", "__");
+                int start = oriUrl.indexOf("/");
+                oriUrl = oriUrl.substring(0, start);
+                oriUrl.replace("__", "//");
+                resultHref = oriUrl+href;
             }  
         }  
   

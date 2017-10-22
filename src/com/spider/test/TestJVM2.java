@@ -20,6 +20,7 @@ import org.junit.*;
 
 public class TestJVM2 {
 	
+	
 	public static void main(String[] arg) throws IOException, InterruptedException{
 		Random random = new Random();
 		while(true){
@@ -29,9 +30,29 @@ public class TestJVM2 {
 		}
 	}
 	@Test
-	public void donothing(){
-		//BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
-		//br.readLine();
+	public void donothing() throws InterruptedException{
+		System.out.println(Son.IKS);
+		System.out.println(Son.SG);
+		/*Parent son1 = new Son();
+		Thread.sleep(2000);
+		Parent son2 = new Son();*/
+		/*son1.stP();
+		System.out.println(son1.greet);
+		son1.print();*/
+		
+	}
+	@Test
+	public void changeToString(){
+		//binary to String
+				//String origin = "10011110 10111001 01110101 01111110 11011000 00101111 10101111 01111101 01000001 11010111 01110111";
+				String origin = "6f 72 67 2f 66 65 6e 69 78 73 6f 66 74 2f";
+				String[] cols = origin.split(" ");  
+				StringBuilder strb = new StringBuilder();  
+				for(String col : cols) {
+				  char ch =(char) Integer.parseInt(col,16);  
+				  strb.append(ch);  
+				}  
+				System.out.println(strb.toString()); 
 	}
 	@Test
 	public void testDeadLock() throws InterruptedException, IOException{
@@ -59,6 +80,7 @@ public class TestJVM2 {
 }
 
 
+
 class DeadLockTest implements Runnable{
 	private Object a;
 	private Object b;
@@ -83,3 +105,36 @@ class DeadLockTest implements Runnable{
 	}
 	
 }
+
+class Parent{
+	public String greet = "i'm father";
+	public static String SG = "i'm father";
+	public void print(){
+		System.out.println("i'm the printer for father");
+	}
+	public static void stP(){
+		System.out.println("i'm the stP for father");
+	}
+	static{
+		System.out.println("init for father");
+	}
+}
+class Son extends Parent{
+	public static final String IKS = "this is a constant";
+	public String greet = "i'm son";
+
+	public void print(){
+		System.out.println("i'm the printer for son");
+	}
+	public static void stP(){
+		System.out.println("i'm the stP for son");
+	}
+	static{
+		System.out.println("init for son");
+	}
+}
+
+
+
+
+

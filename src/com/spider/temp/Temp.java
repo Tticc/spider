@@ -419,6 +419,7 @@ class Tools{
 						URL uri = new URL(imgUrl);
 						//start
 						URLConnection urlcon = uri.openConnection();
+						
 						//将爬虫连接伪装成浏览器连接
 						urlcon.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
 						urlcon.connect();

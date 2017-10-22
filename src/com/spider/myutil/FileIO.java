@@ -7,11 +7,13 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FileIO {
 
 	public static void main(String[] args){
-		String filePath = "D:" + File.separator +"spider" + File.separator +"log"+ File.separator  + "log.txt";
+		String filePath = "D:" + File.separator +"spider" + File.separator +"log"+ File.separator  + "spetial.txt";
 		File f = new File(filePath);
 		String content = readFile(f);
 		System.out.println(content);
@@ -48,6 +50,36 @@ public class FileIO {
 			}
 		}
 	    return sb.toString();
+	}
+	/**
+	 * read file to String List
+	 * @param file
+	 * @return
+	 */
+	public static List<String> readFileToList(File file){
+		String str = null;
+		List<String> list = new ArrayList<String>();
+		BufferedReader input;
+		try {
+			input = new BufferedReader(new FileReader(file));
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+			return null;
+		}
+	    try {
+			while ((str = input.readLine()) != null) {
+				list.add(str);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}finally{
+			try {
+				input.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return list;
 	}
 	//param File, String
 	/**

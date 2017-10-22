@@ -34,8 +34,8 @@ public class TestJVM {
 		public void testAdd() {
 			//fail("Not yet implemented");
 			
-			//连个参数的含义，（期望值，实际值）
-			
+			//2个参数的含义，（期望值，实际值）
+			System.out.println(Integer.toBinaryString(255)+" " + Integer.toBinaryString(13));
 		}
 		
 		@Test  

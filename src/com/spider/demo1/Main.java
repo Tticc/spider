@@ -22,7 +22,7 @@ public class Main {
         
         UrlDataHanding[] url_Handings = new UrlDataHanding[10];  
   
-        for (int i = 0; i < 40; i++) {  
+        for (int i = 0; i < 41; i++) {  
             url_Handings[i] = new UrlDataHanding();  
             new Thread(url_Handings[i]).start();  
             Thread.sleep(1000);
@@ -41,21 +41,5 @@ public class Main {
         	System.out.println(urls);
         }*/
     }  
-    public static void getHrefOfContent(String content, List<String> urlList) {  
-        
-        String[] contents = content.split("<a href=\"");  
-        for (int i = 1; i < contents.length; i++) {  
-            int endHref = contents[i].indexOf("\"");  
-  
-            String aHref = FunctionUtils.getHrefOfInOut(contents[i].substring(  
-                    0, endHref));  
-            if(aHref != null){
-            	urlList.add(aHref);
-            }
-            
-            
-        }  
-  
-        
-    }  
+
 }  
