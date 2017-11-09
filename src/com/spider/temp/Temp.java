@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -36,11 +37,11 @@ import org.apache.http.impl.client.DefaultHttpClient;
  *
  */
 public class Temp { 
-	
+	public static final String rootPath = "www.baidu.com";
 	//private final static Logger logger = ;
 	public static ArrayList<UrlDataHanding> ths = new ArrayList<UrlDataHanding>();
 	public static void main(String[] args) throws InterruptedException {
-		String url = "http://www.baidu.com/";////"http://13.76.185.51:8080/Medical/jsp/frontPage/index.jsp";
+		String url = rootPath;//"http://www.baidu.com/";////"http://13.76.185.51:8080/Medical/jsp/frontPage/index.jsp";
 		
 		Tools.addElem(url);
 		//get-page thread size.
@@ -221,7 +222,7 @@ class UrlDataHanding extends Thread {
  */
 class Tools{
 		//download page in the specific path, it depend what url will put into "urlQueue"
-		public static final String specificPath = "http://www.baidu.com/";//
+		public static final String specificPath = Temp.rootPath;//"http://www.baidu.com/";//
 		//unvisited page url
 		public static LinkedList<String> urlQueue = new LinkedList<String>();
 		//unvisited imp url
@@ -406,6 +407,8 @@ class Tools{
 					String imgName = imgUrl.substring(imgUrl.lastIndexOf("/")+1, imgUrl.length());
 					imgName = count+".jpg";
 					InputStream in = null;
+					//some image url are wrong
+					//imgUrl = imgUrl.replace("http://", "https://");
 					if(imgUrl.startsWith("https://")){
 						//new
 						HttpClient httpClient = new DefaultHttpClient();
@@ -422,8 +425,11 @@ class Tools{
 						
 						//将爬虫连接伪装成浏览器连接
 						urlcon.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
+						//HttpURLConnection httpc = (HttpURLConnection)urlcon;
 						urlcon.connect();
+						
 						in = urlcon.getInputStream();
+						
 						//end
 						
 						//in = uri.openStream();

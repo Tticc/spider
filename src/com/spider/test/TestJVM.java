@@ -30,6 +30,18 @@ public class TestJVM {
 		obj.notify();
 		br.readLine();
 	}
+	public void pup(){
+		System.out.println("i'm the public method");
+	}
+	protected void prp(){
+		System.out.println("i'm the protected method");
+	}
+	private void prip(){
+		System.out.println("i'm the private method");
+	}
+	public void beOverride(){
+		System.out.println("i'm the beOverried method");
+	}
 		@Test
 		public void testAdd() {
 			//fail("Not yet implemented");

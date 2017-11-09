@@ -31,7 +31,7 @@ public class MessyCode {
         }
         return false;
 	}
-	public static boolean isChinese(char c) {
+	private static boolean isChinese(char c) {
         Character.UnicodeBlock ub = Character.UnicodeBlock.of(c);
         if (ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS
                 || ub == Character.UnicodeBlock.CJK_COMPATIBILITY_IDEOGRAPHS
