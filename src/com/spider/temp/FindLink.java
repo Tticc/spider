@@ -1,28 +1,18 @@
 package com.spider.temp;
 
-
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLSession;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -30,127 +20,48 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import com.spider.myutil.FileIO;
 
-/**
- * main method
- * @author wenc
- *
- */
-public class Temp { 
-	public static final String rootPath = "www.baidu.com";//dsf
-	//private final static Logger logger = ;
-	public static ArrayList<UrlDataHanding> ths = new ArrayList<UrlDataHanding>();
+public class FindLink {
+	public static final String rootPath = "https://www.csdn.net/";//
+	public static final String target = "";
+	//download page in the specific path, it depend what url will put into "urlQueue"
+	public static final String specificPath = "https://www.csdn.net/";//
+	public static final String specificPath2 = "https://www.csdn.net/";
+	public static final String charset = "utf-8";
+	
+	public static ArrayList<UrlDataHandingFind> ths = new ArrayList<UrlDataHandingFind>();
 	public static void main(String[] args) throws InterruptedException {
 		String url = rootPath;//"http://www.baidu.com/";////"http://13.76.185.51:8080/Medical/jsp/frontPage/index.jsp";
-		
-		Tools.addElem(url);
-		//get-page thread size.
-		int UrlDataHandingThreadSize = 1;
-		//start get-page thread
+		ToolsFind.addElem(url);
+		int UrlDataHandingThreadSize = 10;
 		for (int i = 0; i < UrlDataHandingThreadSize; i++) {             
-			ths.add(new UrlDataHanding());
+			ths.add(new UrlDataHandingFind());
             ths.get(i).start();
 			Thread.sleep(4000);
         }
-		//interrupt get-page thread
-		/*for(int i = 0; i < UrlDataHandingThreadSize; i++) { 
-			ths.get(i).setInterruptIt(true);
-		}*/
-		/*System.out.println("Here is the visited url -------------------------------------------");
-		for(String item : Tools.visitedUrlQueue){
-			System.out.println(item);
-		}*/
-		
-		//start downloadimg thread.
-		//Thread.sleep(1000*4);
-		/*for(String item : Tools.urlQueue){
-			System.out.println(item);
+		Thread.sleep(1000*60*1);
+		StringBuilder sb = new StringBuilder();
+		for(String keys : ToolsFind.targetLinkAndTitle.keySet()){
+			sb.append(keys+"\t");
+			sb.append(ToolsFind.targetLinkAndTitle.get(keys)+"\r\n");
 		}
 
-		Thread.sleep(1000*60);*/
-		downloadImg[] dlis = new downloadImg[1];
-		for(int i = 0; i < dlis.length; i++){
-			dlis[i] = new downloadImg();
-			dlis[i].start();
+		StringBuilder sbv = new StringBuilder();
+		for(String link : ToolsFind.visitedUrlQueue){
+			//System.out.println(link);
+			sbv.append(link+"\r\n");
 		}
-		
+		String filePath = "D:" + File.separator +"spider" + File.separator +"log"+ File.separator  + "targetUrlMap.txt";
+		File f = new File(filePath);
+		String filePathv = "D:" + File.separator +"spider" + File.separator +"log"+ File.separator  + "visitedUrl.txt";
+		File fv = new File(filePathv);
+		FileIO.newWriteFileWithString(f,sb.toString());
+		FileIO.newWriteFileWithString(fv,sbv.toString());
 	}
-  
+
 }
-
-/**
- * download img thread
- * @author wenc
- *
- */
-class downloadImg extends Thread {  
-	boolean interruptIt = false;
-	public void setInterruptIt(boolean interruptIt){
-		this.interruptIt = interruptIt;
-	}
-	/**
-	 * try to interrupt thread itself
-	 */
-	public void pauseThread(){
-		synchronized(this){
-			if(interruptIt){
-				try{
-					System.out.println(Thread.currentThread().getId()+"--before sleep!");
-					wait();
-					System.out.println(Thread.currentThread().getId()+"--after sleep!");
-				}catch(InterruptedException e){
-					System.out.println("---------------------exception in wait--------------");
-					e.printStackTrace();
-				}
-			}
-		}
-	}
-	/**
-	 * wake up. call by outside
-	 */
-	public void notifyThread(){
-		synchronized(this){
-			try{
-				System.out.println(Thread.currentThread().getId()+"--before wakeup!");
-				notify();
-				System.out.println(Thread.currentThread().getId()+"--after wakeup!");
-			}catch(Exception ex){
-				System.out.println("---------------------exception in notify--------------");
-				ex.printStackTrace();
-			}
-		}
-	}
-
-   
-    public void run() {
-    	int count = 1;
-        while (!Tools.isImgUrlEmpty()) {  
-        	
-        	try{
-            	System.out.println("Thread ID--"+Thread.currentThread().getId());
-        		System.out.println("unproduced number : "+Tools.imgUrlSize());
-        		String url = Tools.outElemFromImgUrl();
-        		Tools.downloadImg(Tools.createDir(url), url,count);
-        		count++;
-        	}catch(Exception ex){
-        		ex.printStackTrace();
-        	}
-        	
-        }
-        System.out.println("urlQueue size : " + Tools.size());
-        System.out.println("visitedUrlQueue size : " + Tools.visitedSize());
-        
-    }  
-}  
-
-
-
-/**
- * get-page thread
- * @author wenc
- *
- */
-class UrlDataHanding extends Thread {  
+class UrlDataHandingFind extends Thread {  
 	boolean interruptIt = false;
 	public void setInterruptIt(boolean interruptIt){
 		this.interruptIt = interruptIt;
@@ -188,10 +99,14 @@ class UrlDataHanding extends Thread {
 	 */
     public void dataHanding(String url) {  
     	try{
-			String pageContent = Tools.getContentFromUrl(url);
-			
-			Tools.addALinkedList(Tools.getImgUrlFromContent(pageContent, url));
-			Tools.getHrefOfContent(pageContent, url);
+			String pageContent = ToolsFind.getContentFromUrl(url);
+			String title = ToolsFind.getTitle(pageContent);
+			if(!"".equals(title) && title.indexOf(FindLink.target) > -1){
+				//ToolsFind.addElemToTarget(url);
+				ToolsFind.addTLT(url,title);
+			}
+			//ToolsFind.addALinkedList(ToolsFind.getImgUrlFromContent(pageContent, url));
+			ToolsFind.getHrefOfContent(pageContent, url);
 			pauseThread();
 		}catch(java.lang.IllegalArgumentException ex){
 			ex.printStackTrace();
@@ -204,9 +119,9 @@ class UrlDataHanding extends Thread {
   
     public void run() {  
     	System.out.println("Thread ID--"+Thread.currentThread().getId());
-        while (!Tools.isEmpty()) {  
+        while (!ToolsFind.isEmpty()) {  
         	try{
-        		dataHanding(Tools.outElem());
+        		dataHanding(ToolsFind.outElem());
         	}catch(Exception ex){
         		ex.printStackTrace();
         	}
@@ -216,13 +131,13 @@ class UrlDataHanding extends Thread {
 }  
 
 /**
- * tools class
+ * ToolsFind class
  * @author wenc
  *
  */
-class Tools{
+class ToolsFind{
 		//download page in the specific path, it depend what url will put into "urlQueue"
-		public static final String specificPath = Temp.rootPath;//"http://www.baidu.com/";//
+		public static final String specificPath = FindLink.specificPath;//"http://www.baidu.com/";//
 		//unvisited page url
 		public static LinkedList<String> urlQueue = new LinkedList<String>();
 		//unvisited imp url
@@ -230,6 +145,19 @@ class Tools{
 		//visited page url
 		public static HashSet<String> visitedUrlQueue = new HashSet<String>();
 
+		//target URL
+		public static ArrayList<String> targetLink = new ArrayList<String>();
+		
+		//target url&title
+		public static HashMap<String,String> targetLinkAndTitle = new HashMap<String,String>();
+		public synchronized static void addTLT(String url, String title){
+			if(!targetLinkAndTitle.containsKey(url)){
+				targetLinkAndTitle.put(url, title);
+			}
+			
+		}
+		
+		
 		public synchronized static void addElem(String url){
 			urlQueue.add(url);
 		}
@@ -274,6 +202,16 @@ class Tools{
 			return visitedUrlQueue.size();
 		}
 		
+		public synchronized static void addElemToTarget(String url) {
+			targetLink.add(url);
+		}
+		public synchronized static boolean isContainsInTarget(String url) {
+			return targetLink.contains(url);
+		}
+		public synchronized static int targetSize() {
+			return targetLink.size();
+		}
+		
 		
 		/**
 		 * get page content by completed url
@@ -306,8 +244,17 @@ class Tools{
 						urlcon.connect();
 						
 						inS = urlcon.getInputStream();
+						
+						//end
+						
+						//in = uri.openStream();
 					}
-
+		            //URL realUrl = new URL(url);
+		            //URLConnection connection = realUrl.openConnection();
+		            //将爬虫连接伪装成浏览器连接
+		            
+		            
+		            //InputStream urlStream = connection.getInputStream();  
 		            in = new BufferedReader(new InputStreamReader(inS,FindLink.charset));  
 		            String line = "";  
 		            while ((line = in.readLine()) != null) {
@@ -345,12 +292,13 @@ class Tools{
 	            if (finalUrl != null) {
 	                if (!isContains(finalUrl) && !isContainsInVisited(finalUrl)) {
 	                    addElem(finalUrl);
-	        			if(Tools.size()>100000){
-	        				Tools.outElem();
+	        			if(ToolsFind.size()>100000){
+	        				ToolsFind.outElem();
 	        			}
 	                }
 	            }
 	        }
+	        urlQueue.size();
 	        System.out.println(size() + "--抓取到的连接数");  
 	        System.out.println(visitedSize() + "--已处理的页面数");  
 	        System.out.println("Thread ID--"+Thread.currentThread().getId());
@@ -629,5 +577,3 @@ class Tools{
 		}
 
 }
-
-
