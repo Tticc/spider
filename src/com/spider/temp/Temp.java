@@ -37,7 +37,9 @@ import org.apache.http.impl.client.DefaultHttpClient;
  *
  */
 public class Temp { 
-	public static final String rootPath = "www.baidu.com";//dsf
+	public static final String rootPath = "https://www.csdn.net/";//dssx
+	public static final String specificPath = "https://www.csdn.net/";//s
+	public static final boolean IKnowImgStartWithHttps = true;
 	//private final static Logger logger = ;
 	public static ArrayList<UrlDataHanding> ths = new ArrayList<UrlDataHanding>();
 	public static void main(String[] args) throws InterruptedException {
@@ -222,7 +224,7 @@ class UrlDataHanding extends Thread {
  */
 class Tools{
 		//download page in the specific path, it depend what url will put into "urlQueue"
-		public static final String specificPath = Temp.rootPath;//"http://www.baidu.com/";//
+		public static final String specificPath = Temp.specificPath;//"http://www.baidu.com/";//
 		//unvisited page url
 		public static LinkedList<String> urlQueue = new LinkedList<String>();
 		//unvisited imp url
@@ -424,7 +426,10 @@ class Tools{
 					imgName = count+".jpg";
 					InputStream in = null;
 					//some image url are wrong
-					//imgUrl = imgUrl.replace("http://", "https://");
+					if(imgUrl.startsWith("http://") && Temp.IKnowImgStartWithHttps){
+						imgUrl = imgUrl.replace("http://", "https://");
+					}
+					
 					if(imgUrl.startsWith("https://")){
 						//new
 						HttpClient httpClient = new DefaultHttpClient();
